@@ -59,10 +59,10 @@
                         <div x-show="activeTab===3" >
                             @livewire('admin.parametrage.repartition')
                         </div>
-                        {{--
                         <div x-show="activeTab===4" >
                             @livewire('admin.parametrage.preselection')
                         </div>
+                        {{--
                         <div x-show="activeTab===5" >
                             @livewire('admin.restauration.repas')
                         </div>
