@@ -14,8 +14,11 @@ use App\Models\Response;
 
 use Livewire\WithPagination;
 
+
 class Preselection extends Component
 {
+
+    use WithPagination;
 
     public $niveau = 1;
     public $newQuestion;
@@ -29,16 +32,23 @@ class Preselection extends Component
 
     public function render()
     {
+        $quiz = Quiz::where('niveau_id', $this->niveau)->first();
+        $qvideo = Qvideo::where('niveau_id', $this->niveau)->first();
+        $niveau = Niveau::find($this->niveau);
+
+        $questions = [];
+        if ($quiz) {
+            $questions = Question::where('quiz_id', $quiz->id)->orderBy('created_at', 'desc')->get();
+        }
 
         return view('livewire.admin.parametrage.preselection', [
-            'quiz' => Quiz::where('niveau_id', $this->niveau)->first(),
-            'qvideo' => Qvideo::where('niveau_id', $this->niveau)->first(),
-            '_niveau' => Niveau::find($this->niveau),
+            'quiz' => $quiz,
+            'qvideo' => $qvideo,
+            '_niveau' => $niveau,
             'quizzes' => Quiz::all(),
-            'questions' => Quiz::where('niveau_id', $this->niveau)->first() != null ? Question::where('quiz_id', Quiz::where('niveau_id', $this->niveau)->first()->id)->orderBy('created_at', 'desc')->get() :  [],
+            'questions' => $questions,
             'niveaux' => Niveau::all()
         ]);
-    
     }
 
     public function updateQuiz($qid)
@@ -53,10 +63,15 @@ class Preselection extends Component
 
     public function storeNewQuestion()
     {
+        $quiz = Quiz::where('niveau_id', $this->niveau)->first();
+        if (!$quiz) {
+            session()->flash('error', 'Aucun quiz trouvé pour ce niveau. Veuillez créer un quiz d\'abord.');
+            return;
+        }
 
         Question::create([
             'content' => $this->newQuestion,
-            'quiz_id' => Quiz::where('niveau_id', $this->niveau)->first()->id,
+            'quiz_id' => $quiz->id,
         ]);
 
         $this->resetVars();
@@ -95,16 +110,18 @@ class Preselection extends Component
             'question_id' => $qid
         ]);
 
-        foreach (Quiz::where('niveau_id', $this->niveau)->first()->qsessions as $qs) {
-            QsessionResponse::create([
-                'score' => $r->score,
-                'state' => 0,
-                'qsession_id' => $qs->id,
-                'response_id' => $r->id,
-                'question_id' => $r->question_id
-            ]);
+        $quiz = Quiz::where('niveau_id', $this->niveau)->first();
+        if ($quiz && $quiz->qsessions) {
+            foreach ($quiz->qsessions as $qs) {
+                QsessionResponse::create([
+                    'score' => $r->score,
+                    'state' => 0,
+                    'qsession_id' => $qs->id,
+                    'response_id' => $r->id,
+                    'question_id' => $r->question_id
+                ]);
+            }
         }
-
 
         $this->resetVars();
     }
@@ -126,10 +143,15 @@ class Preselection extends Component
         $res->score = $this->newResponseS[$qid];
         $res->save();
 
-        foreach (Quiz::where('niveau_id', $this->niveau)->first()->qsessions as $qs) {
-            $qsres = QsessionResponse::where('qsession_id', $qs->id)->where('response_id', $this->resp_id)->where('question_id', $res->question_id)->first();
-            $qsres->score = $res->score;
-            $qsres->save();
+        $quiz = Quiz::where('niveau_id', $this->niveau)->first();
+        if ($quiz && $quiz->qsessions) {
+            foreach ($quiz->qsessions as $qs) {
+                $qsres = QsessionResponse::where('qsession_id', $qs->id)->where('response_id', $this->resp_id)->where('question_id', $res->question_id)->first();
+                if ($qsres) {
+                    $qsres->score = $res->score;
+                    $qsres->save();
+                }
+            }
         }
 
         $this->resetVars();
