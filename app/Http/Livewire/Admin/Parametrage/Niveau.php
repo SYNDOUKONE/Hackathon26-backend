@@ -13,6 +13,7 @@ class Niveau extends Component
 
     use WithPagination;
 
+    public $activeTab = 'niveaux';
     public $libelle ;
     public $niveau_id ;
     public $edit_mode = false ;
@@ -148,8 +149,11 @@ class Niveau extends Component
     {
         $participant = \App\Models\Participant::find($id);
         if($participant) {
+            if($participant->etudiant) {
+                $participant->etudiant->delete();
+            }
             $participant->delete();
-            session()->flash('success', 'Participant supprimé avec succès.');
+            session()->flash('success', 'Participant supprimé avec succès (compte utilisateur conservé).');
         }
     }
 

@@ -1,7 +1,21 @@
 <div class="px-4 py-5">
+    <!-- Tab Navigation -->
+    <div class="flex border-b border-cyan-900 mb-6 gap-4">
+        <button wire:click="$set('activeTab', 'niveaux')" class="px-4 py-2 text-sm font-bold {{ $activeTab == 'niveaux' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-white' }} transition-all">
+            🎓 Niveaux
+        </button>
+        <button wire:click="$set('activeTab', 'classes')" class="px-4 py-2 text-sm font-bold {{ $activeTab == 'classes' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-white' }} transition-all">
+            🏫 Classes
+        </button>
+        <button wire:click="$set('activeTab', 'participants')" class="px-4 py-2 text-sm font-bold {{ $activeTab == 'participants' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-white' }} transition-all">
+            👥 Participants
+        </button>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        @if($activeTab == 'niveaux')
         <!-- Section Gestion des Niveaux -->
-        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg">
+        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg lg:col-span-2">
             <h3 class="text-lg font-bold text-cyan-400 mb-4 border-b border-cyan-900 pb-2">🎓 Gestion des Niveaux</h3>
 
             <div class="mb-6">
@@ -49,9 +63,11 @@
                 </table>
             </div>
         </div>
+        @endif
 
+        @if($activeTab == 'classes')
         <!-- Section Gestion des Classes -->
-        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg">
+        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg lg:col-span-2">
             <h3 class="text-lg font-bold text-cyan-400 mb-4 border-b border-cyan-900 pb-2">🏫 Gestion des Classes</h3>
 
             <div class="mb-6">
@@ -117,9 +133,11 @@
                 {{$classes->links()}}
             </div>
         </div>
+        @endif
 
+        @if($activeTab == 'participants')
         <!-- Section Gestion des Participants -->
-        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg mt-8">
+        <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg mt-8 lg:col-span-2">
             <h3 class="text-lg font-bold text-cyan-400 mb-4 border-b border-cyan-900 pb-2">👥 Gestion des Participants Inscrit</h3>
 
             <div class="overflow-hidden rounded-lg border border-gray-800">
@@ -136,7 +154,10 @@
                         <tr class="hover:bg-gray-800/50">
                             <td class="px-4 py-2">{{ $p->etudiant->nom }} {{ $p->etudiant->prenom }}</td>
                             <td class="px-4 py-2">{{ $p->equipe->libelle ?? 'Sans équipe' }}</td>
-                            <td class="px-4 py-2 text-center">
+                            <td class="px-4 py-2 text-center flex justify-center gap-3">
+                                <button wire:click="resetParticipantPassword({{$p->id}})" class="text-yellow-400 hover:text-yellow-300 p-2" title="Réinitialiser le mot de passe">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                </button>
                                 <button wire:click="deleteParticipant({{$p->id}})" class="text-red-400 hover:text-red-300 p-2" title="Supprimer l'inscription">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
                                 </button>
@@ -150,8 +171,6 @@
                 {{$participants->links()}}
             </div>
         </div>
-    </div>
-    </div>
-
+        @endif
     </div>
 </div>
