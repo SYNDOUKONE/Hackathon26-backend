@@ -70,16 +70,16 @@ class Preselection extends Component
 
     public function storeNewQuestion()
     {
-        $quiz = null;
-        if ($this->track) {
-            $quiz = Quiz::where('niveau_id', $this->niveau)->where('title', $this->track)->first();
-        } else {
-            $quiz = Quiz::where('niveau_id', $this->niveau)->first();
-        }
+        $quiz = Quiz::where('niveau_id', $this->niveau)->first();
 
         if (!$quiz) {
-            session()->flash('error', 'Aucun quiz trouvé pour ce niveau. Veuillez créer un quiz d\'abord.');
-            return;
+            // Création automatique du quiz si aucun n'existe pour ce niveau
+            $quiz = Quiz::create([
+                'niveau_id' => $this->niveau,
+                'title' => 'Quiz Niveau ' . $this->niveau,
+                'score' => 0,
+                'state' => 1
+            ]);
         }
 
         Question::create([
