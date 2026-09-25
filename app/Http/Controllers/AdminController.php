@@ -139,12 +139,21 @@ class AdminController extends Controller
 
     public function Soumission(Request $request)
     {
-        $codeDecrypte = Crypt::decryptString($request->qrcodeValue);
+        try {
+            $codeDecrypte = Crypt::decryptString($request->qrcodeValue);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            $request->session()->flash('error', 'Code QR invalide ou corrompu');
+            return redirect()->back();
+        }
 
         $etudiant = Etudiant::where('matricule', $codeDecrypte)->first();
 
-        if (Repa::latest()->first()) {
+        if (!$etudiant) {
+            $request->session()->flash('error', 'Étudiant non trouvé');
+            return redirect()->back();
+        }
 
+        if (Repa::latest()->first()) {
             $statut = Restauration::where('etudiant_id', $etudiant->id)
                 ->where('repa_id', Repa::latest()->first()->id)
                 ->where('hackaton_id', Hackaton::where('inscription', 1)->first()->id)
