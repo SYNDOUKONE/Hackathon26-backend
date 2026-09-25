@@ -64,6 +64,7 @@
                                         <th class="px-4 py-2">Équipe</th>
                                         <th class="px-4 py-2 text-center">Score</th>
                                         <th class="px-4 py-2 text-center">Date de soumission</th>
+                                        <th class="px-4 py-2 text-center">Temps mis</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-800 text-white">
@@ -72,6 +73,9 @@
                                         <td class="px-4 py-2 font-bold">{{ $session->equipe->libelle ?? 'Équipe inconnue' }}</td>
                                         <td class="px-4 py-2 text-center text-cyan-400 font-bold">{{ $session->score }} pts</td>
                                         <td class="px-4 py-2 text-center text-gray-400">{{ $session->created_at->format('d/m/Y H:i') }}</td>
+                                        <td class="px-4 py-2 text-center text-gray-400">
+                                            {{ $session->duration }}s
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -17,6 +17,7 @@ class Niveau extends Component
     public $niveau_id ;
     public $edit_mode = false ;
     public $classe_id ;
+    public $participant_id;
 
     // Niveau management
     public $niv_libelle;
@@ -28,7 +29,8 @@ class Niveau extends Component
     {
         return view('livewire.admin.parametrage.niveau',[
             'niveaux' => ModelsNiveau::all(),
-            'classes' => Classe::orderBy('created_at', 'DESC')->paginate(6)
+            'classes' => Classe::orderBy('created_at', 'DESC')->paginate(6),
+            'participants' => \App\Models\Participant::with('etudiant', 'equipe')->paginate(10)
         ]);
     }
 
@@ -134,12 +136,35 @@ class Niveau extends Component
     {
         if($id)
        {
-           
+
            $classe = Classe::find($id);
            $classe->delete();
            //session()->flash('warning', 'Suppression éffectué avec succès.');
        }
-        
+
+    }
+
+    public function deleteParticipant(int $id)
+    {
+        $participant = \App\Models\Participant::find($id);
+        if($participant) {
+            $participant->delete();
+            session()->flash('success', 'Participant supprimé avec succès.');
+        }
+    }
+
+    public function resetParticipantPassword(int $id)
+    {
+        $participant = \App\Models\Participant::find($id);
+        if($participant && $participant->etudiant) {
+            $user = $participant->etudiant->user;
+            if($user) {
+                // Remise du mot de passe par défaut (ex: 'password' ou basé sur l'email)
+                $user->password = bcrypt('password');
+                $user->save();
+                session()->flash('success', 'Mot de passe réinitialisé par défaut pour ' . $participant->etudiant->nom);
+            }
+        }
     }
 
 

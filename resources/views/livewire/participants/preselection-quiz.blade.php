@@ -33,6 +33,19 @@
                 </div>
             </div>
 
+            <!-- Timer Bar -->
+            <div style="margin-bottom:32px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">
+                        Temps restant pour cette question
+                    </span>
+                    <span id="timer-text" style="font-size:0.8rem;color:var(--neon-cyan);font-weight:700;">{{ $durationPerQuestion }}s</span>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;">
+                    <div id="timer-bar" style="width:100%;height:100%;background:var(--neon-cyan);transition:width 1s linear;box-shadow:0 0 5px var(--neon-cyan);"></div>
+                </div>
+            </div>
+
             <!-- Question -->
             <div style="margin-bottom:32px;">
                 <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--text-primary);line-height:1.4;margin-bottom:24px;">
@@ -79,3 +92,42 @@
         </div>
     @endif
 </div>
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        let timerInterval;
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            let timeLeft = {{ $durationPerQuestion }};
+            const timerBar = document.getElementById('timer-bar');
+            const timerText = document.getElementById('timer-text');
+
+            if (!timerBar || !timerText) return;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timerText) timerText.innerText = timeLeft + 's';
+                if (timerBar) {
+                    let percentage = (timeLeft / {{ $durationPerQuestion }}) * 100;
+                    timerBar.style.width = percentage + '%';
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Simuler le clic sur le bouton "Suivant" ou "Soumettre"
+                    const nextBtn = document.querySelector('button[wire\\:click="nextQuestion"]')
+                                 || document.querySelector('button[wire\\:click="submitQuiz"]');
+                    if (nextBtn) nextBtn.click();
+                }
+            }, 1000);
+        }
+
+        startTimer();
+
+        // Relancer le timer quand Livewire met à jour le composant (changement de question)
+        Livewire.hook('message.processed', (message, component) => {
+            startTimer();
+        });
+    });
+</script>

@@ -13,7 +13,8 @@ class Qsession extends Model
         'state',
         'score',
         'quiz_id',
-        'equipe_id'
+        'equipe_id',
+        'duration',
     ];
 
     public function equipe(){

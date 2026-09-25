@@ -22,6 +22,9 @@ class PreselectionQuiz extends Component
     public $isQuizOpen = false;
     public $finalScore = 0;
     public $totalScore = 0;
+    public $durationPerQuestion = 15;
+    public $quizDurationTotal = 0;
+    public $startTime;
 
     public function mount()
     {
@@ -42,9 +45,13 @@ class PreselectionQuiz extends Component
             return redirect()->route('dashboard');
         }
 
+        $this->durationPerQuestion = $quiz->duration_per_question ?? 15;
+        $this->quizDurationTotal = $this->durationPerQuestion * count($this->questions ?? []); // Will be updated after loading questions
+
         $this->questions = Question::where('quiz_id', $quiz->id)->with('responses')->get();
         $this->totalScore = $quiz->score;
         $this->isQuizOpen = ($quiz->state == 1);
+        $this->quizDurationTotal = $this->durationPerQuestion * count($this->questions);
 
         // Vérifier si le quiz a déjà été passé
         $session = Qsession::where('equipe_id', $this->equipe->id)->first();
@@ -98,6 +105,7 @@ class PreselectionQuiz extends Component
 
         $session->score = $score;
         $session->state = 1;
+        $session->duration = now()->diffInSeconds($this->startTime);
         $session->save();
 
         $this->finalScore = $score;
