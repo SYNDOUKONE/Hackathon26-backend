@@ -21,6 +21,10 @@ RUN apt-get update && apt-get install -y \
         zip \
         intl
 
+# Corriger le conflit MPM : désactiver mpm_prefork et activer mpm_event
+RUN a2dismod mpm_prefork && \
+    a2enmod mpm_event
+
 # Activer Apache rewrite (Laravel)
 RUN a2enmod rewrite
 
