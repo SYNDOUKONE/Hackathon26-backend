@@ -2,46 +2,49 @@
 
     <div class="px-4 py-5 ">
 
-        @if($_niveau->quiz_available == 1)
+        @if($_niveau && $_niveau->quiz_available == 1)
         <div>
 
-            <div class="text-md font-bold text-center">Score: {{$quiz->score}} pts</div>
-            <div class="text-md font-bold text-center">Questions: {{sizeof($questions)}}</div>
+            @if($quiz)
+                <div class="text-md font-bold text-center">Score: {{$quiz->score}} pts</div>
+                <div class="text-md font-bold text-center">Questions: {{sizeof($questions)}}</div>
 
-            <div class="col-span-6" style="margin-bottom: 30px;">
-                <div class="flex flex-col">
-                    <table class="w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <form>
-                                    <th scope="col" class="px-6 py-3 text-xs font-bold tracking-wider text-left text-gray-500 uppercase">
-                                        <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
-                                            @foreach ($niveaux as $niv)
-                                            <option value="{{$niv->id}}">{{$niv->libelle}}</option>
-                                            @endforeach
-                                        </select>
-                                    </th>
-                                    <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                        <input type="number" wire:model="quiz_score" min=0 placeholder="Score..." required class="relative w-full px-3 py-2 ext-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100" />
-                                    </th>
-                                    <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                        <button wire:click.prevent="updateQuiz({{$quiz->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold text-white uppercase transition-all duration-150 rounded shadow outline-none ease-linearbg-emerald-500 bg-myblue hover:shadow-lg focus:outline-none" type="submit">
-                                            Modifier
-                                        </button>
-                                    </th>
-                                    <th>
-                                        <button wire:click.prevent="openCloseQuiz({{$quiz->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold uppercase border rounded-md cursor-pointer border-orange text-orange hover:bg-orange hover:text-white hover:shadow" type="submit">
-                                            @if($quiz->state == 1) Fermer le quiz @else Ouvrir le quiz @endif
-                                        </button>
-                                        <span id="dNd" style="display:none;">Done</span>
-                                    </th>
-                                </form>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="col-span-6" style="margin-bottom: 30px;">
+                    <div class="flex flex-col">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <form>
+                                        <th scope="col" class="px-6 py-3 text-xs font-bold tracking-wider text-left text-gray-500 uppercase">
+                                            <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
+                                                @foreach ($niveaux as $niv)
+                                                <option value="{{$niv->id}}">{{$niv->libelle}}</option>
+                                                @endforeach
+                                            </select>
+                                        </th>
+                                        <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            <input type="number" wire:model="quiz_score" min=0 placeholder="Score..." required class="relative w-full px-3 py-2 ext-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100" />
+                                        </th>
+                                        <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            <button wire:click.prevent="updateQuiz({{$quiz->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold text-white uppercase transition-all duration-150 rounded shadow outline-none ease-linearbg-emerald-500 bg-myblue hover:shadow-lg focus:outline-none" type="submit">
+                                                Modifier
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button wire:click.prevent="openCloseQuiz({{$quiz->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold uppercase border rounded-md cursor-pointer border-orange text-orange hover:bg-orange hover:text-white hover:shadow" type="submit">
+                                                @if($quiz->state == 1) Fermer le quiz @else Ouvrir le quiz @endif
+                                            </button>
+                                            <span id="dNd" style="display:none;">Done</span>
+                                        </th>
+                                    </form>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
+            @else
+                <div class="text-center text-red-500 font-bold">Aucun quiz trouvé pour ce niveau. Veuillez en créer un.</div>
+            @endif
 
             <div class="col-span-6">
                 <div class="flex flex-col">
@@ -59,7 +62,6 @@
                                     </th>
                                 </form>
                             </tr>
-
                         </thead>
                     </table>
                 </div>
@@ -73,15 +75,13 @@
                             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                     <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-
                                         <table class="min-w-full divide-y table-auto  divide-gray-200">
-
                                             <thead class="bg-gray-50">
                                                 <tr>
                                                     <th scope="col" class="px-6 py-3 text-xs font-bold tracking-wider text-left text-gray-500 uppercase">
                                                         {{$question->content}}
                                                     </th>
-                                                    <th lass="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
 
                                                     </th>
                                                     <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -102,11 +102,8 @@
                                                         </div>
                                                         <span style="font-size:0.7rem;color:var(--neon-cyan);margin-left:5px;font-weight:bold;">Neon</span>
                                                     </th>
-                                                    </th>
                                                 </tr>
-
                                             </thead>
-
                                             <tbody class="bg-white divide-y divide-gray-200">
                                                 @foreach($question->responses as $response)
                                                 <tr>
@@ -129,7 +126,6 @@
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-
                                                         <div class="flex">
                                                             <a wire:click="editResponse({{$question->id}}, {{$response->id}})" class="px-2 text-cyan-500 cursor-pointer hover:text-cyan-300">
                                                                 <svg class="w-6 h-6 " viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -145,12 +141,9 @@
                                                                 </svg>
                                                             </a>
                                                         </div>
-
                                                     </td>
-
                                                 </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -165,11 +158,9 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <form method="POST">
-
                                             <th scope="col" class="px-6 py-3 text-xs font-bold tracking-wider text-left text-gray-500 uppercase">
                                                 <input type="text" wire:model="newResponseC.{{$question->id}}" placeholder="Reponse..." class="relative px-3 py-2 w-full text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100" />
                                             </th>
-
                                             <th scope="col-span-2" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                 <input type="number" wire:model="newResponseS.{{$question->id}}" placeholder="Nombre de point..." min="0" class="relative px-3 py-2 w-full text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100" />
                                             </th>
@@ -180,7 +171,6 @@
                                             </th>
                                         </form>
                                     </tr>
-
                                 </thead>
                             </table>
                         </div>
@@ -207,9 +197,13 @@
                                     </select>
                                 </th>
                                 <th>
-                                    <button wire:click.prevent="openCloseQvideo({{$qvideo->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold uppercase border rounded-md cursor-pointer border-orange text-orange hover:bg-orange hover:text-white hover:shadow" type="submit">
-                                        @if($qvideo->state == 1) Fermer la soumission de video @else Ouvrir la soumission de video @endif
-                                    </button>
+                                    @if($qvideo)
+                                        <button wire:click.prevent="openCloseQvideo({{$qvideo->id}})" class="px-6 py-3 mb-1 mr-1 text-sm font-bold uppercase border rounded-md cursor-pointer border-orange text-orange hover:bg-orange hover:text-white hover:shadow" type="submit">
+                                            @if($qvideo->state == 1) Fermer la soumission de video @else Ouvrir la soumission de video @endif
+                                        </button>
+                                    @else
+                                        <span class="text-gray-500 italic">Aucune vidéo configurée</span>
+                                    @endif
                                     <span id="dNd" style="display:none;">Done</span>
                                 </th>
                             </tr>
