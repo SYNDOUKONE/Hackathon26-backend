@@ -14,6 +14,7 @@ class Quiz extends Model
         'score',
         'state',
         'niveau_id',
+        'duration_per_question',
     ];
 
     public function niveau(){

@@ -30,6 +30,7 @@ class Preselection extends Component
     public $resp_id;
     public $que_id;
     public $quiz_score;
+    public $quiz_duration;
 
     public function render()
     {
@@ -44,8 +45,13 @@ class Preselection extends Component
         $niveau = Niveau::find($this->niveau);
 
         $questions = [];
+        $sessions = [];
         if ($quiz) {
             $questions = Question::where('quiz_id', $quiz->id)->orderBy('created_at', 'desc')->get();
+            $sessions = Qsession::with('equipe')
+                ->where('quiz_id', $quiz->id)
+                ->orderBy('score', 'desc')
+                ->get();
         }
 
         return view('livewire.admin.parametrage.preselection', [
@@ -54,7 +60,8 @@ class Preselection extends Component
             '_niveau' => $niveau,
             'quizzes' => Quiz::where('niveau_id', $this->niveau)->get(),
             'questions' => $questions,
-            'niveaux' => Niveau::all()
+            'niveaux' => Niveau::all(),
+            'sessions' => $sessions
         ]);
     }
 
@@ -63,6 +70,7 @@ class Preselection extends Component
         $qi = Quiz::find($qid);
 
         $qi->score = $this->quiz_score;
+        $qi->duration_per_question = $this->quiz_duration;
         $qi->save();
 
         $this->resetVars();
@@ -222,5 +230,6 @@ class Preselection extends Component
         $this->editModeQ = false;
         $this->resp_id = 0;
         $this->quiz_score = "";
+        $this->quiz_duration = "";
     }
 }

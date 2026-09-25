@@ -3,27 +3,15 @@
     <div class="px-4 py-5 ">
 
                 <div class="mb-6 flex justify-center gap-4">
-                    <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
-                        <label class="font-bold text-white">Sélectionner le Niveau :</label>
-                        <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
-                            @foreach ($niveaux as $niv)
-                            <option value="{{$niv->id}}">{{$niv->libelle}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    @if($niveau >= 2)
-                    <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
-                        <label class="font-bold text-white">Parcours :</label>
-                        <select wire:model='track' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
-                            <option value="">Sélectionner un parcours</option>
-                            @foreach ($quizzes as $q)
-                            <option value="{{$q->title}}">{{$q->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-                </div>
+            <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
+                <label class="font-bold text-white">Sélectionner le Niveau :</label>
+                <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
+                    @foreach ($niveaux as $niv)
+                    <option value="{{$niv->id}}">{{$niv->libelle}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
         @if($_niveau)
             <div class="grid grid-cols-1 gap-6">
@@ -38,20 +26,60 @@
                                 <label class="text-sm font-medium text-gray-400 mb-1">Score Total du Quiz</label>
                                 <input type="number" wire:model="quiz_score" min=0 placeholder="Ex: 100" class="relative w-48 px-3 py-2 text-sm text-white bg-gray-800 border-gray-600 rounded outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
                             </div>
+                            <div class="flex flex-col">
+                                <label class="text-sm font-medium text-gray-400 mb-1">Durée / Question (sec)</label>
+                                <input type="number" wire:model="quiz_duration" min=1 placeholder="Ex: 15" class="relative w-48 px-3 py-2 text-sm text-white bg-gray-800 border-gray-600 rounded outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
+                            </div>
                             <button wire:click.prevent="updateQuiz({{$quiz->id}})" class="px-6 py-2 bg-myblue text-white font-bold uppercase rounded shadow hover:bg-blue-600 transition-all">
-                                Modifier le Score
+                                Modifier
                             </button>
-                            <button wire:click.prevent="openCloseQuiz({{$quiz->id}})" class="px-6 py-2 border border-orange text-orange font-bold uppercase rounded hover:bg-orange hover:text-white transition-all">
-                                @if($quiz->state == 1) Fermer le quiz @else Ouvrir le quiz @endif
-                            </button>
+                            <div class="flex items-center gap-2 ml-4">
+                                <label class="text-sm font-medium text-gray-400">Statut :</label>
+                                <button wire:click.prevent="openCloseQuiz({{$quiz->id}})" class="px-6 py-2 border {{ $quiz->state == 1 ? 'border-green-500 text-green-500' : 'border-orange-500 text-orange-500' }} font-bold uppercase rounded hover:bg-opacity-20 transition-all">
+                                    @if($quiz->state == 1) 🟢 En ligne @else 🔴 Hors ligne @endif
+                                </button>
+                            </div>
                         </div>
                         <div class="mt-2 text-sm text-gray-400">
                             Score actuel : <span class="text-cyan-400 font-bold">{{$quiz->score}} pts</span> |
+                            Temps / Question : <span class="text-cyan-400 font-bold">{{$quiz->duration_per_question ?? 15}} s</span> |
                             Questions : <span class="text-cyan-400 font-bold">{{sizeof($questions)}}</span>
                         </div>
                     @else
                         <div class="bg-red-900/30 border border-red-500 p-4 rounded-lg text-red-400 font-bold text-center">
                             ⚠️ Aucun quiz n'est créé pour ce niveau. Veuillez ajouter des questions ci-dessous pour initialiser le quiz.
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Liste des Équipes ayant répondu -->
+                <div class="bg-gray-900 p-6 rounded-xl border border-cyan-900 shadow-lg">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 border-b border-cyan-900 pb-2">📊 Résultats des Équipes</h3>
+
+                    @if(count($sessions) > 0)
+                        <div class="overflow-hidden rounded-lg border border-gray-800">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-gray-800 text-gray-400 uppercase text-xs">
+                                    <tr>
+                                        <th class="px-4 py-2">Équipe</th>
+                                        <th class="px-4 py-2 text-center">Score</th>
+                                        <th class="px-4 py-2 text-center">Date de soumission</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800 text-white">
+                                    @foreach($sessions as $session)
+                                    <tr class="hover:bg-gray-800/50 transition-colors">
+                                        <td class="px-4 py-2 font-bold">{{ $session->equipe->libelle ?? 'Équipe inconnue' }}</td>
+                                        <td class="px-4 py-2 text-center text-cyan-400 font-bold">{{ $session->score }} pts</td>
+                                        <td class="px-4 py-2 text-center text-gray-400">{{ $session->created_at->format('d/m/Y H:i') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-6 text-gray-500 italic">
+                            Aucune équipe n'a encore terminé ce quiz.
                         </div>
                     @endif
                 </div>
