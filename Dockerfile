@@ -24,8 +24,10 @@ RUN apt-get update && apt-get install -y \
 # Activer Apache rewrite (Laravel)
 RUN a2enmod rewrite
 
-# Fixer l'erreur "More than one MPM loaded"
-RUN a2dismod mpm_prefork && a2enmod mpm_event
+# Fixer l'erreur "More than one MPM loaded" de manière radicale
+RUN rm -f /etc/apache2/mods-enabled/mpm_prefork.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_worker.load \
+    && a2enmod mpm_event
 
 # Changer le DocumentRoot vers /public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
