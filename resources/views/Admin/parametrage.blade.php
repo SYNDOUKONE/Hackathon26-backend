@@ -49,22 +49,24 @@
                     <div class="w-full h-full p-6" style="background: rgba(6, 11, 20, 0.5);">
                         <div x-show="activeTab===0" >
                             @livewire('admin.parametrage.hackaton')
-                        </div>
+                        </div
+                        {{--
                         <div x-show="activeTab===1" >
                             @livewire('admin.parametrage.niveau')
-                        </div>
+                        </div
                         <div x-show="activeTab===2" >
                             @livewire('admin.salle')
-                        </div>
+                        </div
                         <div x-show="activeTab===3" >
                             @livewire('admin.parametrage.repartition')
-                        </div>
+                        </div
                         <div x-show="activeTab===4" >
                             @livewire('admin.parametrage.preselection')
-                        </div>
+                        </div
                         <div x-show="activeTab===5" >
                             @livewire('admin.restauration.repas')
-                        </div>
+                        </div
+                        --}}
                     </div>
                     
                     <div class="flex justify-center gap-4 p-6 border-t" style="border-color: rgba(0, 245, 255, 0.1);">
