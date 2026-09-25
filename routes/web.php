@@ -73,19 +73,30 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {});
 
 Route::get('/pdf/listeEquipe/selection/niveau2', 'App\Http\Controllers\pdfController@listeselectEquipeN2')->name('liste.equipe.select.n2');
 
-Route::get('/force-admin-setup', function () {
-    $email = 'admin_final@hackathon.com';
-    $password = 'password123';
+Route::get('/force-admin-final', function () {
+    $email = env('ADMIN_EMAIL');
+    $password = env('ADMIN_PASSWORD');
 
+    if (!$email || !$password) {
+        return "❌ Erreur : Les variables ADMIN_EMAIL et ADMIN_PASSWORD doivent être configurées sur Railway.";
+    }
+
+    // 1. Création ou récupération de l'utilisateur
     $user = \App\Models\User::firstOrCreate(
         ['email' => $email],
-        ['name' => 'Final Admin', 'password' => bcrypt($password)]
+        ['name' => 'Super Admin Railway', 'password' => bcrypt($password)]
     );
 
-    $user->assignRole('super-admin');
-    $user->assignRole('Administrateur');
+    // 2. Force l'assignation des rôles
+    try {
+        $user->assignRole('super-admin');
+        $user->assignRole('Administrateur');
+        $status = "✅ Rôles assignés avec succès !";
+    } catch (\Exception $e) {
+        $status = "⚠️ Erreur lors de l'assignation des rôles : " . $e->getMessage();
+    }
 
-    return "✅ Admin created successfully! Email: $email, Password: $password";
+    return "🚀 Compte Admin forcé avec succès !<br>Email: <b>$email</b><br>Statut: $status";
 });
 
 Route::get('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@show')->name('password.assign.show');
