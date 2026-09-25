@@ -108,3 +108,21 @@ Route::get('/force-admin-final', function () {
 
 Route::get('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@show')->name('password.assign.show');
 Route::post('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@assign')->name('password.assign');
+
+Route::get('/fix-data', function () {
+    try {
+        $hackaton = \App\Models\Hackaton::where('inscription', 1)->first();
+        if (!$hackaton) {
+            \App\Models\Hackaton::create([
+                'pco_1' => 'Admin',
+                'pco_2' => 'Admin',
+                'annee' => '2026',
+                'inscription' => 1
+            ]);
+            return "✅ Données réparées ! Un hackathon par défaut a été créé.";
+        }
+        return "ℹ️ Les données sont déjà présentes.";
+    } catch (\Exception $e) {
+        return "❌ Erreur : " . $e->getMessage();
+    }
+});
