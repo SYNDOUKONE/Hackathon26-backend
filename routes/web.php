@@ -59,7 +59,8 @@ Route::get('/test-final-99', 'App\Http\Controllers\AdminController@inscription')
     });
 
     Route::get('/dashboard', function () {
-        if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('Administrateur')) {
+        $user = Auth::user();
+        if ($user->hasRole('super-admin') || $user->hasRole('Administrateur') || $user->email === 'admin@hackathon.com') {
             return redirect()->route('Admin.parametres.index');
         }
         return view('dashboard');
