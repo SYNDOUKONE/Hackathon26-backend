@@ -18,18 +18,26 @@ if (!App\Models\Hackaton::where('inscription', 1)->exists()) {
 
 # 3. Create a default Admin user and assign roles
 php artisan tinker --execute="
-if (!App\Models\User::where('email', 'admin@hackathon.com')->exists()) {
+if (!App\Models\User::where('email', env('ADMIN_EMAIL'))->exists()) {
+    \$email = env('ADMIN_EMAIL');
+    \$password = env('ADMIN_PASSWORD');
+
+    if (!\$email || !\$password) {
+        echo '❌ Error: ADMIN_EMAIL and ADMIN_PASSWORD environment variables must be set.';
+        exit(1);
+    }
+
     \$user = new App\Models\User;
     \$user->name = 'Admin';
-    \$user->email = 'admin@hackathon.com';
-    \$user->password = bcrypt('password');
+    \$user->email = \$email;
+    \$user->password = bcrypt(\$password);
     \$user->save();
 
     // Assign roles
     \$user->assignRole('super-admin');
     \$user->assignRole('Administrateur');
 
-    echo '✅ Default Admin user created and roles assigned.';
+    echo '✅ Default Admin user created: ' . \$email;
 } else {
     echo 'ℹ️ Admin user already exists.';
 }

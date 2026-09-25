@@ -61,7 +61,7 @@ Route::get('/test-final-99', 'App\Http\Controllers\AdminController@inscription')
 
     Route::get('/dashboard', function () {
         $user = Auth::user();
-        if ($user->hasRole('super-admin') || $user->hasRole('Administrateur') || $user->email === 'admin@hackathon.com') {
+        if ($user->hasRole('super-admin') || $user->hasRole('Administrateur') || $user->email === env('ADMIN_EMAIL')) {
             return redirect()->route('Admin.parametres.index');
         }
         return view('dashboard');
@@ -72,6 +72,21 @@ Route::get('/inscription-terminer', 'App\Http\Controllers\AdminController@inscri
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {});
 
 Route::get('/pdf/listeEquipe/selection/niveau2', 'App\Http\Controllers\pdfController@listeselectEquipeN2')->name('liste.equipe.select.n2');
+
+Route::get('/force-admin-setup', function () {
+    $email = 'admin_final@hackathon.com';
+    $password = 'password123';
+
+    $user = \App\Models\User::firstOrCreate(
+        ['email' => $email],
+        ['name' => 'Final Admin', 'password' => bcrypt($password)]
+    );
+
+    $user->assignRole('super-admin');
+    $user->assignRole('Administrateur');
+
+    return "✅ Admin created successfully! Email: $email, Password: $password";
+});
 
 Route::get('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@show')->name('password.assign.show');
 Route::post('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@assign')->name('password.assign');
