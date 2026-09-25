@@ -2,16 +2,28 @@
 
     <div class="px-4 py-5 ">
 
-        <div class="mb-6 flex justify-center">
-            <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
-                <label class="font-bold text-white">Sélectionner le Niveau :</label>
-                <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
-                    @foreach ($niveaux as $niv)
-                    <option value="{{$niv->id}}">{{$niv->libelle}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+                <div class="mb-6 flex justify-center gap-4">
+                    <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
+                        <label class="font-bold text-white">Sélectionner le Niveau :</label>
+                        <select wire:model='niveau' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
+                            @foreach ($niveaux as $niv)
+                            <option value="{{$niv->id}}">{{$niv->libelle}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    @if($niveau >= 2)
+                    <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg border border-cyan-500">
+                        <label class="font-bold text-white">Parcours :</label>
+                        <select wire:model='track' class="relative w-full px-3 py-2 text-sm text-gray-600 placeholder-gray-400 bg-white border-gray-400 rounded outline-none form-select focus:border-coolGray-400 focus:outline-none focus:ring-coolGray-100">
+                            <option value="">Sélectionner un parcours</option>
+                            @foreach ($quizzes as $q)
+                            <option value="{{$q->title}}">{{$q->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                </div>
 
         @if($_niveau)
             <div class="grid grid-cols-1 gap-6">

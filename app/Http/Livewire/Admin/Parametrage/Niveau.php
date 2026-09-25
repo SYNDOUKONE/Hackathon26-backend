@@ -18,6 +18,12 @@ class Niveau extends Component
     public $edit_mode = false ;
     public $classe_id ;
 
+    // Niveau management
+    public $niv_libelle;
+    public $niv_id;
+    public $niv_edit_mode = false;
+
+
     public function render()
     {
         return view('livewire.admin.parametrage.niveau',[
@@ -29,7 +35,54 @@ class Niveau extends Component
     public function resetInput()
     {
         $this->libelle = "";
-    
+    }
+
+    public function createNiveau()
+    {
+        $this->validate([
+            'niv_libelle' => 'required|min:3'
+        ]);
+
+        ModelsNiveau::create([
+            'libelle' => $this->niv_libelle
+        ]);
+
+        $this->resetNivInput();
+    }
+
+    public function editNiveau(int $id)
+    {
+        $niveau = ModelsNiveau::find($id);
+        $this->niv_libelle = $niveau->libelle;
+        $this->niv_id = $niveau->id;
+        $this->niv_edit_mode = true;
+    }
+
+    public function updateNiveau(int $id)
+    {
+        $this->validate([
+            'niv_libelle' => 'required|min:3'
+        ]);
+
+        $niveau = ModelsNiveau::find($id);
+        $niveau->update([
+            'libelle' => $this->niv_libelle
+        ]);
+
+        $this->resetNivInput();
+        $this->niv_edit_mode = false;
+    }
+
+    public function deleteNiveau(int $id)
+    {
+        $niveau = ModelsNiveau::find($id);
+        $niveau->delete();
+    }
+
+    public function resetNivInput()
+    {
+        $this->niv_libelle = "";
+        $this->niv_id = null;
     }
 
     public function createClasse()
