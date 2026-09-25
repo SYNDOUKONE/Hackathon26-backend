@@ -81,22 +81,29 @@ Route::get('/force-admin-final', function () {
         return "❌ Erreur : Les variables ADMIN_EMAIL et ADMIN_PASSWORD doivent être configurées sur Railway.";
     }
 
-    // 1. Création ou récupération de l'utilisateur
-    $user = \App\Models\User::firstOrCreate(
-        ['email' => $email],
-        ['name' => 'Super Admin Railway', 'password' => bcrypt($password)]
-    );
-
-    // 2. Force l'assignation des rôles
     try {
+        // 1. Création forcée des rôles s'ils n'existent pas
+        $rolesToCreate = ['super-admin', 'Administrateur'];
+        foreach ($rolesToCreate as $roleName) {
+            if (!\Spatie\Permission\Models\Role::where('name', $roleName)->exists()) {
+                \Spatie\Permission\Models\Role::create(['name' => $roleName]);
+            }
+        }
+
+        // 2. Création ou récupération de l'utilisateur
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => $email],
+            ['name' => 'Super Admin Railway', 'password' => bcrypt($password)]
+        );
+
+        // 3. Assignation des rôles
         $user->assignRole('super-admin');
         $user->assignRole('Administrateur');
-        $status = "✅ Rôles assignés avec succès !";
-    } catch (\Exception $e) {
-        $status = "⚠️ Erreur lors de l'assignation des rôles : " . $e->getMessage();
-    }
 
-    return "🚀 Compte Admin forcé avec succès !<br>Email: <b>$email</b><br>Statut: $status";
+        return "🚀 SUCCÈS TOTAL !<br>1. Rôles créés/vérifiés ✅<br>2. Utilisateur créé ✅<br>3. Rôles assignés ✅<br><br>Vous pouvez maintenant vous connecter avec : <b>$email</b>";
+    } catch (\Exception $e) {
+        return "❌ Erreur critique : " . $e->getMessage();
+    }
 });
 
 Route::get('/assign-password', 'App\Http\Controllers\PasswordAssignmentController@show')->name('password.assign.show');
