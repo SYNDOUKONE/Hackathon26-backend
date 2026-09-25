@@ -8,7 +8,7 @@
                     <input wire:model='statut' value="{{old('statut')}}" id="statut" type="checkbox" class="w-4 h-4 border-gray-300 rounded text-orange focus:ring-orange">
                 </div>
                 <div class="ml-3 ">
-                    <label for="statut" class="font-bold text-gray-700">Equipes sélectionnées</label>
+                    <label for="statut" class="font-bold text-cyan-400">Equipes sélectionnées</label>
                 </div>
             </div>
 
@@ -77,7 +77,7 @@
                                     <div class="flex items-center">
 
                                         <div class="ml-4">
-                                            <div class="text-xl font-bold  text-gray-900 text-md">
+                                            <div class="text-xl font-bold  text-cyan-400 text-md">
                                                 {{$equipe->nom}}
                                             </div>
                                         </div>
@@ -88,7 +88,7 @@
                                     <div class="flex items-center">
 
                                         <div class="ml-4">
-                                            <div class="text-sm font-bold  text-gray-900 text-md">
+                                            <div class="text-sm font-bold  text-cyan-400 text-md">
                                                 {{$equipe->niveau->libelle}}
                                             </div>
                                         </div>
@@ -130,7 +130,7 @@
 
                                     @foreach ($equipe->participants as $participant )
 
-                                    <div class="font-semibold text-gray-900 text-md flex">
+                                    <div class="font-semibold text-cyan-400 text-md flex">
                                         {{$participant->etudiant->matricule}} | {{$participant->etudiant->classe}} | {{$participant->etudiant->nom}} {{$participant->etudiant->prenom}}
 
                                         @if($participant->chef )
