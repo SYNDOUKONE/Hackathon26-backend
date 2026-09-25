@@ -53,10 +53,10 @@
                         <div x-show="activeTab===1" >
                             @livewire('admin.parametrage.niveau')
                         </div>
-                        {{--
                         <div x-show="activeTab===2" >
                             @livewire('admin.salle')
-                        </div
+                        </div>
+                        {{--
                         <div x-show="activeTab===3" >
                             @livewire('admin.parametrage.repartition')
                         </div
