@@ -1,3 +1,386 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+/* ================================================
+   HACKATHON 2026 — DARK THEME OVERRIDES
+   Override Jetstream / Tailwind defaults pour
+   le thème Dark Tech & Futuriste
+   ================================================ */
+
+/* -- Variables dark (réutilisées si hackathon-theme.css non chargé) -- */
+:root {
+  --neon-cyan:       #00f5ff;
+  --neon-cyan-dim:   rgba(0, 245, 255, 0.15);
+  --neon-orange:     #ff6b35;
+  --neon-orange-dim: rgba(255, 107, 53, 0.15);
+  --bg-dark:         #060b14;
+  --bg-dark-2:       #0a1628;
+  --glass-bg:        rgba(10, 22, 40, 0.7);
+  --glass-border:    rgba(0, 245, 255, 0.15);
+  --text-primary:    #e8f4f8;
+  --text-muted:      rgba(232, 244, 248, 0.55);
+  --font-display:    'Orbitron', 'Space Grotesk', sans-serif;
+  --font-body:       'Inter', 'Space Grotesk', sans-serif;
+  --glow-cyan:       0 0 20px rgba(0, 245, 255, 0.4), 0 0 60px rgba(0, 245, 255, 0.1);
+  --glow-orange:     0 0 20px rgba(255, 107, 53, 0.5), 0 0 60px rgba(255, 107, 53, 0.15);
+  --transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Body & global ---- */
+body {
+  background-color: var(--bg-dark) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-body) !important;
+}
+
+/* ---- Jetstream Navigation Override ---- */
+nav.bg-white {
+  background: rgba(6, 11, 20, 0.92) !important;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+/* Nav links */
+nav .text-gray-500,
+nav .text-gray-700,
+nav .hover\:text-gray-700 {
+  color: rgba(232, 244, 248, 0.65) !important;
+}
+nav a:hover,
+nav button:hover {
+  color: var(--neon-cyan) !important;
+}
+nav .border-indigo-400,
+nav .border-b-2 {
+  border-color: var(--neon-cyan) !important;
+}
+nav .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+/* Active nav link */
+nav [aria-current="page"],
+nav .border-indigo-400 {
+  color: var(--neon-cyan) !important;
+  border-bottom-color: var(--neon-cyan) !important;
+}
+
+/* Nav button backgrounds */
+nav .bg-white,
+nav button.bg-white {
+  background: transparent !important;
+}
+nav .hover\:bg-gray-50:hover,
+nav .focus\:bg-gray-50:focus {
+  background: rgba(0, 245, 255, 0.05) !important;
+}
+
+/* Dropdown menus */
+.bg-white.rounded-md,
+.bg-white.shadow-lg,
+[x-ref="panel"] {
+  background: #0a1628 !important;
+  border: 1px solid rgba(0, 245, 255, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+}
+.text-gray-400 { color: rgba(232, 244, 248, 0.4) !important; }
+.text-gray-700 { color: rgba(232, 244, 248, 0.8) !important; }
+.hover\:bg-gray-100:hover { background: rgba(0, 245, 255, 0.08) !important; }
+.border-t.border-gray-100 { border-color: rgba(0, 245, 255, 0.1) !important; }
+.border-b.border-gray-200 { border-color: rgba(0, 245, 255, 0.08) !important; }
+
+/* ---- Jetstream Forms ---- */
+.bg-gray-100 { background: var(--bg-dark) !important; }
+.bg-white { background: rgba(10, 22, 40, 0.75) !important; }
+.shadow-xl { box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 1px rgba(0, 245, 255, 0.1) !important; }
+.sm\:rounded-lg { border-radius: 16px !important; }
+.border.border-gray-200 { border-color: rgba(0, 245, 255, 0.1) !important; }
+
+/* Jetstream inputs override */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  background: rgba(6, 11, 20, 0.8) !important;
+  border-color: rgba(0, 245, 255, 0.2) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
+  outline: none !important;
+}
+input::placeholder,
+textarea::placeholder { color: rgba(232, 244, 248, 0.35) !important; }
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--neon-cyan) !important;
+  box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.1) !important;
+  background: rgba(0, 245, 255, 0.03) !important;
+}
+
+/* Jetstream labels */
+label {
+  color: rgba(232, 244, 248, 0.8) !important;
+}
+
+/* Jetstream buttons */
+.bg-gray-800,
+button[type="submit"],
+.jet-button {
+  background: linear-gradient(135deg, var(--neon-cyan), #0099ff) !important;
+  color: #060b14 !important;
+  border: none !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  border-radius: 8px !important;
+  transition: var(--transition) !important;
+}
+.bg-gray-800:hover,
+button[type="submit"]:hover {
+  box-shadow: var(--glow-cyan) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Jetstream error messages */
+.text-red-600 { color: #ff4060 !important; }
+.text-green-600 { color: #00ff88 !important; }
+
+/* Dashboard header */
+header.bg-white.shadow {
+  background: rgba(6, 11, 20, 0.95) !important;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important;
+  box-shadow: none !important;
+}
+header h2 { color: var(--text-primary) !important; }
+
+/* ---- Custom color utilities ---- */
+.text-orange { color: var(--neon-orange) !important; }
+.text-cyan   { color: var(--neon-cyan) !important; }
+.text-danger { color: #ff4060 !important; text-shadow: 0 0 8px rgba(255, 64, 96, 0.3); }
+.text-success { color: #00ff88 !important; text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+.text-highlight { color: #fff !important; font-weight: 700; }
+.text-muted-bright { color: rgba(232, 244, 248, 0.8) !important; }
+
+
+/* ---- Livewire inscription tabs ---- */
+.inscription-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: rgba(6, 11, 20, 0.6);
+  border: 1px solid rgba(0, 245, 255, 0.12);
+  border-radius: 12px;
+  padding: 6px;
+}
+.inscription-tab-btn {
+  flex: 1;
+  padding: 12px 20px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.inscription-tab-btn.active,
+.inscription-tab-btn[aria-selected="true"] {
+  background: linear-gradient(135deg, rgba(0, 245, 255, 0.15), rgba(0, 153, 255, 0.1));
+  border: 1px solid rgba(0, 245, 255, 0.25);
+  color: var(--neon-cyan);
+}
+
+/* ---- Scrollbar dark ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 255, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 245, 255, 0.4); }
+
+/* ---- Selection color ---- */
+::selection {
+  background: rgba(0, 245, 255, 0.2);
+  color: var(--neon-cyan);
+}
+
+/* ---- Livewire Validations ---- */
+.text-red-400, .text-red-500 { color: #ff4060 !important; }
+[wire\:loading] { opacity: 0.6; }
+
+/* ---- Admin Tables & Management Visibility ---- */
+.admin-container {
+  background: rgba(10, 22, 40, 0.8) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Target all tables in admin views */
+table {
+  color: var(--text-primary) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+th {
+  background: rgba(0, 245, 255, 0.1) !important;
+  color: var(--neon-cyan) !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 12px !important;
+  border-bottom: 2px solid var(--neon-cyan) !important;
+}
+
+td {
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important;
+  padding: 10px !important;
+}
+
+tr:hover td {
+  background: rgba(0, 245, 255, 0.05) !important;
+}
+
+/* Fixed colors for common Tailwind classes used in admin views */
+.bg-white { background: rgba(10, 22, 40, 0.8) !important; }
+.text-gray-500, .text-gray-600 { color: var(--text-muted) !important; }
+.text-gray-700, .text-gray-800, .text-gray-900 { color: var(--text-primary) !important; }
+.border-gray-200 { border-color: rgba(0, 245, 255, 0.1) !important; }
+
+/* ---- Admin Component Specific Fixes ---- */
+/* Fix backgrounds for admin layout wrappers */
+.bg-white, .bg-gray-50 {
+    background: rgba(10, 22, 40, 0.7) !important;
+}
+
+/* Fix input and label colors in admin forms */
+.text-gray-600, .text-gray-500 {
+    color: var(--text-muted) !important;
+}
+
+.font-bold {
+    color: var(--text-primary) !important;
+}
+
+/* Fix the specific "emerald" and "myblue" buttons to match neon theme */
+.bg-emerald-500, .bg-myblue {
+    background: linear-gradient(135deg, var(--neon-cyan), #0099ff) !important;
+    color: #060b14 !important;
+    border: none !important;
+}
+
+/* Fix table borders and division lines */
+.divide-gray-200, .border-gray-200 {
+    border-color: rgba(0, 245, 255, 0.1) !important;
+}
+
+/* Fix text colors inside tables */
+.text-gray-900 {
+    color: var(--text-primary) !important;
+}
+
+/* Fix SVG icons in admin tables */
+.text-green-700 { color: #00ff88 !important; }
+.text-red-700 { color: #ff4060 !important; }
+
+/* Fix layout gaps and padding for better visibility */
+.overflow-hidden.border-b.border-gray-200 {
+    border-color: rgba(0, 245, 255, 0.2) !important;
+    background: rgba(10, 22, 40, 0.5) !important;
+}
+
+/* ---- Ultra-Visibility Fixes for Admin & Quiz ---- */
+
+/* Force all labels and bold text in admin to be visible */
+div label, 
+div .font-bold, 
+span .font-bold, 
+p .font-bold,
+.text-md.font-bold {
+    color: var(--text-primary) !important;
+    opacity: 1 !important;
+}
+
+/* Fix input text visibility (ensure it's not gray on dark) */
+input, select, textarea {
+    color: var(--text-primary) !important;
+}
+
+/* Force visibility for ALL table content regardless of Tailwind classes */
+table tr td, 
+table tr th, 
+.divide-y > *, 
+.divide-x > * {
+    color: var(--text-primary) !important;
+}
+
+/* Fix the "Saisie" (Input) area specifically */
+.col-span-2, .col-span-4 {
+    color: var(--text-primary) !important;
+}
+
+/* Fix the specific "PCO" and "Année" labels in Hackaton settings */
+.text-gray-600, .text-gray-500, .text-gray-400 {
+    color: var(--text-muted) !important;
+}
+
+/* High-contrast for specific admin labels */
+.font-bold.text-center, .font-bold.text-left {
+    color: var(--neon-cyan) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Fix for the "Niveau", "Classe", "Equipes" visibility in tables */
+.text-sm, .text-md {
+    color: var(--text-primary) !important;
+}
+
+/* ---- Neon Overrides for all Gray Texts ---- */
+[class*="text-gray-"], 
+.text-gray-100, .text-gray-200, .text-gray-300, 
+.text-gray-400, .text-gray-500, .text-gray-600, 
+.text-gray-700, .text-gray-800, .text-gray-900 {
+    color: var(--neon-cyan) !important;
+}
+
+/* Force labels and bold headings to stay Neon Cyan for high contrast */
+label, 
+.font-bold, 
+.text-md.font-bold, 
+th {
+    color: var(--neon-cyan) !important;
+}
+
+/* ---- SCOPED ADMIN VISIBILITY (Only for .admin-container) ---- */
+.admin-container [class*="text-gray-"], 
+.admin-container .text-gray-100, .admin-container .text-gray-200, .admin-container .text-gray-300, 
+.admin-container .text-gray-400, .admin-container .text-gray-500, .admin-container .text-gray-600, 
+.admin-container .text-gray-700, .admin-container .text-gray-800, .admin-container .text-gray-900 {
+    color: var(--neon-cyan) !important;
+}
+
+.admin-container label, 
+.admin-container .font-bold, 
+.admin-container .text-md.font-bold, 
+.admin-container th {
+    color: var(--neon-cyan) !important;
+}
+
+.admin-container input, 
+.admin-container select, 
+.admin-container textarea {
+    color: var(--text-primary) !important;
+}
+
+.admin-container table td {
+    color: var(--text-primary) !important;
+}

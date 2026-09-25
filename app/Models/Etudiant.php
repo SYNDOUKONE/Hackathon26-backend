@@ -41,17 +41,23 @@ class Etudiant extends Model
 
     public function getEquipe()
     {
-        $equipe_id = $this->currentEquipe()->equipe_id ;
+        $current = $this->currentEquipe();
+        if (!$current) {
+            return null;
+        }
+        $equipe_id = $current->equipe_id ;
 
         $equipe = Equipe::find($equipe_id) ;
         return $equipe ;
     }
 
-    public function is_chief() 
+    public function is_chief()
     {
-        return Participant::where('etudiant_id', $this->id)
+        $participant = Participant::where('etudiant_id', $this->id)
                             ->where('hackaton_id', $hackaton = Hackaton::where('inscription', 1)->first()->id)
-                            ->first()->chef ;
+                            ->first();
+
+        return $participant ? $participant->chef : false;
     }
 
     public function Commande()

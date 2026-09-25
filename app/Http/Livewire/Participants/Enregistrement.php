@@ -59,7 +59,7 @@ class Enregistrement extends Component
     public function render()
     {
         return view('livewire.participants.enregistrement', [
-            'niveaux' => $this->esatic == 1 ? Niveau::all() : Niveau::where('quiz_available', 0)->get(),
+            'niveaux' => Niveau::all(),
             'classes' => Classe::where('niveau_id', $this->niveau)->where('esatic', $this->esatic)->get()
         ]);
     }
@@ -172,53 +172,30 @@ class Enregistrement extends Component
 
     public function createEquipe()
     {
-
         $this->setMAtricule();
 
         $validate = $this->validate([
             'niveau' => 'required',
             'nom_groupe' => 'required',
 
-            'matricule_chef' => 'required|min:8|unique:etudiants,matricule',
             'nom_chef' => 'required',
             'prenom_chef' => 'required',
             'classe_chef' => 'required',
             'email_chef' => 'required|email|unique:users,email',
-
-            'matricule_m2' => 'required|min:8|unique:etudiants,matricule',
-            'nom_m2' => 'required',
-            'prenom_m2' => 'required',
-            'classe_m2' => 'required',
-            'email_m2' => 'required|email|email|unique:users,email',
-
             'genre_chef' => 'required',
-            'genre_m2' => 'required',
-            'genre_m3' => 'required',
-
-
-            'matricule_m3' => 'required|min:8|unique:etudiants,matricule',
-            'nom_m3' => 'required',
-            'prenom_m3' => 'required',
-            'classe_m3' => 'required',
-            'email_m3' => 'required|email|email|unique:users,email'
-
         ]);
 
-        // dd($validate);
-
         $this->errorEmail = false;
+        // No longer checking against m2/m3 since they are handled in GestionEquipe
 
-        $this->VerifEmail();
-        $this->VerifMatricule();
-
-
-        if (!$this->errorEmail and !$this->errorMatricule) {
-
-            // recuperation de l'hackaton
+        try {
+            \DB::beginTransaction();
 
             $hackaton = Hackaton::where('inscription', 1)->first();
+            if (!$hackaton) {
+                throw new \Exception('Aucun hackathon actif trouvé pour les inscriptions.');
+            }
 
-            // creation de l'équipe
             $equipe = Equipe::create([
                 'nom' => $this->nom_groupe,
                 'logo' => $this->photo_groupe,
@@ -226,89 +203,49 @@ class Enregistrement extends Component
                 'hackaton_id' => $hackaton->id
             ]);
 
-
             if (Niveau::find($this->niveau)->quiz_available == 1) {
                 Qsession::create([
                     'quiz_id' => Quiz::where('niveau_id', $this->niveau)->first()->id,
                     'equipe_id' => $equipe->id
                 ]);
             }
-            // creation du participant 1
 
-            $user1 = User::create([
+            $user = User::create([
                 'name' => trim($this->matricule_chef),
                 'email' => $this->email_chef,
                 'password' => Hash::make("sdi23@TH12345")
             ]);
 
-
-            $etudiant1 = Etudiant::create([
+            $etudiant = Etudiant::create([
                 'nom' => $this->nom_chef,
                 'prenom' => $this->prenom_chef,
                 'matricule' => trim($this->matricule_chef),
                 'genre' => $this->genre_chef,
-                'classe' => $this->esatic == 1 ? Classe::find($this->classe_chef)->libelle : $this->classe_chef,
-                'user_id' => $user1->id
+                'classe' => $this->esatic == 1 ? (Classe::find($this->classe_chef)->libelle ?? $this->classe_chef) : $this->classe_chef,
+                'user_id' => $user->id
             ]);
-
-            // creation du participant 2 
-
-            $user2 = User::create([
-                'name' => trim($this->matricule_m2),
-                'email' => $this->email_m2,
-                'password' => Hash::make("sdi23@TH12345")
-            ]);
-
-            $etudiant2 = Etudiant::create([
-                'nom' => $this->nom_m2,
-                'prenom' => $this->prenom_m2,
-                'matricule' => trim($this->matricule_m2),
-                'genre' => $this->genre_m2,
-                'classe' => $this->esatic == 1 ? Classe::find($this->classe_m2)->libelle : $this->classe_m2,
-                'user_id' => $user2->id
-            ]);
-
-            // creation du participant 3 
-
-            $user3 = User::create([
-                'name' => trim($this->matricule_m3),
-                'email' => $this->email_m3,
-                'password' => Hash::make("sdi23@TH12345")
-            ]);
-
-            $etudiant3 = Etudiant::create([
-                'nom' => $this->nom_m3,
-                'prenom' => $this->prenom_m3,
-                'matricule' => trim($this->matricule_m3),
-                'genre' => $this->genre_m3,
-                'classe' => $this->esatic == 1 ? Classe::find($this->classe_m3)->libelle : $this->classe_m3,
-                'user_id' => $user3->id
-            ]);
-
-            // enregistrement des participants
 
             Participant::create([
                 'chef' => true,
-                'etudiant_id' => $etudiant1->id,
+                'etudiant_id' => $etudiant->id,
                 'equipe_id' => $equipe->id,
                 'hackaton_id' => $hackaton->id
             ]);
 
-            Participant::create([
-                'etudiant_id' => $etudiant2->id,
-                'equipe_id' => $equipe->id,
-                'hackaton_id' => $hackaton->id
-            ]);
+            \DB::commit();
 
-            Participant::create([
-                'etudiant_id' => $etudiant3->id,
-                'equipe_id' => $equipe->id,
-                'hackaton_id' => $hackaton->id
+            // Store password in session to display it on the finish page
+            session([
+                'registered_email' => $user->email,
+                'registered_password' => "sdi23@TH12345",
+                'registered_nom' => $this->nom_chef
             ]);
-
-            //  $this->resetInput();
 
             return redirect()->to('/inscription-terminer');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            session()->flash('error', 'Une erreur est survenue lors de l\'enregistrement : ' . $e->getMessage());
         }
     }
 }

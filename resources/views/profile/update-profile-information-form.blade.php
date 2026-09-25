@@ -64,11 +64,11 @@
             <x-jet-input-error for="prenom" class="mt-2" />
         </div>
 
-        <!-- Matricule -->
+        <!-- Classe / École -->
         <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="matricule" value="{{ __('Matricule') }}" />
-            <x-jet-input id="matricule" type="text" class="mt-1 block w-full" wire:model.defer="state.matricule" placeholder="{{Auth::user()->etudiant->matricule}}" autocomplete="matricule" />
-            <x-jet-input-error for="matricule" class="mt-2" />
+            <x-jet-label for="classe" value="{{ __('Classe / École') }}" />
+            <x-jet-input id="classe" type="text" class="mt-1 block w-full" wire:model.defer="state.classe" placeholder="{{Auth::user()->etudiant->classe}}" autocomplete="classe" />
+            <x-jet-input-error for="classe" class="mt-2" />
         </div>
 
         <!-- Email -->

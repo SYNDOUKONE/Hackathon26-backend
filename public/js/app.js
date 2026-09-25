@@ -5539,13 +5539,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"];
-alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start(); // import { createApp } from 'vue';
-// import QrCode from '../components/QrCode.vue';
-// createApp({
-//     components: {
-//         QrCode,
-//     }
-// }).mount('#app');
+alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 
 /***/ }),
 
@@ -22831,6 +22825,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/css/hackathon-theme.css":
+/*!*******************************************!*\
+  !*** ./resources/css/hackathon-theme.css ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./resources/css/app.css":
 /*!*******************************!*\
   !*** ./resources/css/app.css ***!
@@ -23211,6 +23218,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/app": 0,
+/******/ 			"css/hackathon-theme": 0,
 /******/ 			"css/inscription": 0,
 /******/ 			"css/acceuil1": 0,
 /******/ 			"css/acceuil": 0,
@@ -23267,14 +23275,15 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/app.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/acceuil.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/acceuil1.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/inscription.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/particles.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/particles1.css")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/terminer.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/app.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/acceuil.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/acceuil1.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/inscription.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/particles.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/particles1.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/terminer.css")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/hackathon-theme","css/inscription","css/acceuil1","css/acceuil","css/app","css/terminer","css/particles1","css/particles"], () => (__webpack_require__("./resources/css/hackathon-theme.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

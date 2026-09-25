@@ -42,14 +42,7 @@ class AdminController extends Controller
 
     public function inscription()
     {
-        $hackaton = Hackaton::where('inscription', 1)->first();
-        $statut =  Hackaton::where('inscription', 1)->first()->canRecord();
-
-        if ($hackaton->inscription and $statut) {
-            return view('participants.inscription');
-        } else {
-            return redirect()->route('welcome');
-        }
+        return view('participants.inscription');
     }
 
     public function finPreselection()
@@ -129,7 +122,7 @@ class AdminController extends Controller
 
     public function gestionRestaurant()
     {
-        $repas = Repa::orderBy('created_at', 'DESC')->get();
+        $repas = Repa::orderBy('created_at', 'DESC')->paginate(10);
 
         $hackaton = Hackaton::where('inscription', 1)->first();
 

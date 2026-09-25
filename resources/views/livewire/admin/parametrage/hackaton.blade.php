@@ -96,7 +96,7 @@
                                             </td>
 
                                             <td>
-                                                <div class="flex">
+                                                <div class="flex gap-2">
                                                     <button wire:click.prevent='activation({{$hack->id}})' class="px-2 py-1 text-sm font-bold flex uppercase transition-all duration-150 rounded shadow outline-none ease-linearbg-emerald-500  hover:shadow-lg focus:outline-none">
 
                                                         @if ($hack->inscription)
@@ -113,6 +113,11 @@
 
                                                         @endif
 
+                                                    </button>
+                                                    <button wire:click.prevent='deleteHackaton({{$hack->id}})' class="px-2 py-1 text-sm font-bold flex uppercase transition-all duration-150 rounded shadow outline-none ease-linearbg-red-500  hover:shadow-lg focus:outline-none" onclick="confirm('Êtes-vous sûr de vouloir supprimer ce Hackathon ?') || event.stopImmediatePropagation()">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 1.3a25.376 25.376 0 01-6.849 4.708M17 6L6 6m11 0v11m0-11H6m11 0a7 7 0 10-14 0 7 7 0 0014 0z" />
+                                                        </svg>
                                                     </button>
                                                 </div>
                                             </td>

@@ -50,6 +50,10 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('tailwindcss'),
     ])
+    .postCss('resources/css/hackathon-theme.css', 'public/css', [
+        require('postcss-import'),
+        require('tailwindcss'),
+    ])
     .imgs({
         source: 'resources/images',
         destination: 'public/images'

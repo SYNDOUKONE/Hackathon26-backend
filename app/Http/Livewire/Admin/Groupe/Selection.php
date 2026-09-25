@@ -62,6 +62,9 @@ class Selection extends Component
     public function autoSelct()
     {
         $quiz = Quiz::where('niveau_id', $this->niveauselect)->first();
+        if (!$quiz) {
+            return;
+        }
 
         $qsW = Qsession::where('quiz_id', $quiz->id)->orderBy('score', 'desc')->get();
         $qS = Qsession::where('quiz_id', $quiz->id)->get();
@@ -70,20 +73,24 @@ class Selection extends Component
         if ($this->nb_team >= sizeof($qsW)) {
             foreach ($qsW as $qs) {
                 $e = $qs->equipe;
-                $e->statut = 1;
-                $e->save();
+                if ($e) {
+                    $e->statut = 1;
+                    $e->save();
+                }
             }
         } else {
-            for ($i = 0; $i < $this->nb_team; $i++) {
+            for ($i = 0; $i < min($this->nb_team, count($qsW)); $i++) {
                 $e = $qsW[$i]->equipe;
-                $e->statut = 1;
-                $e->save();
+                if ($e) {
+                    $e->statut = 1;
+                    $e->save();
+                }
             }
         }
 
         foreach ($qS as $qs) {
             $e = $qs->equipe;
-            if ($e->statut == 0) {
+            if ($e && $e->statut == 0) {
                 $qs->score = $qs->score > 0 ? -$qs->score : $qs->score;
                 $qs->save();
             }
@@ -93,12 +100,17 @@ class Selection extends Component
     public function resetSelection()
     {
         $quiz = Quiz::where('niveau_id', $this->niveauselect)->first();
+        if (!$quiz) {
+            return;
+        }
         $qsessions = Qsession::where('quiz_id', $quiz->id)->get();
 
         foreach ($qsessions as $qs) {
             $e = $qs->equipe;
-            $e->statut = 0;
-            $e->save();
+            if ($e) {
+                $e->statut = 0;
+                $e->save();
+            }
 
             $qs->score = $qs->score < 0 ? -$qs->score : $qs->score;
             $qs->save();

@@ -39,7 +39,7 @@ class Hackaton extends Component
     {
         $this->validate([
             'pco_1' => 'required',
-            'annee' => 'required|min:4'
+            'annee' => 'required|min:4|unique:hackatons,annee'
         ]);
 
         ModelsHackaton::create([
@@ -49,6 +49,17 @@ class Hackaton extends Component
         ]);
 
         $this->resetInput();
+    }
+
+    public function deleteHackaton($id)
+    {
+        if($id)
+        {
+            $hackaton = ModelsHackaton::find($id);
+            if ($hackaton) {
+                $hackaton->delete();
+            }
+        }
     }
 
 

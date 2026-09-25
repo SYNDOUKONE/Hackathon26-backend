@@ -1,44 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>C2E | HACKATHON</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" media="screen" href="{{mix('css/particles.css')}}">
-
-  <link rel="icon" href="https://sdi-hackathon23.c2e.ci/images/logoSDI-PhotoRoom.png" type="image/icon">
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <!-- Scripts -->
-  <script src="{{ mix('js/app.js') }}" defer></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscriptions fermées | Hackathon 2026</title>
+  <link rel="icon" href="{{asset('images/app/logoSDI-PhotoRoom.png')}}" type="image/png">
+  <link rel="stylesheet" href="{{ mix('css/hackathon-theme.css') }}">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .fin-card {
+      max-width: 560px;
+      width: 100%;
+      background: rgba(10, 22, 40, 0.75);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      border-radius: 24px;
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fin-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-orange), transparent);
+    }
+  </style>
 </head>
 <body>
+  <div class="hk-grid-bg" aria-hidden="true"></div>
+  <div class="hk-gradient-orb orb-1" aria-hidden="true"></div>
+  <div class="hk-gradient-orb orb-2" aria-hidden="true"></div>
 
-<!-- particles.js container -->
-<div id="particles-js">
-    <div class="flex flex-col items-center justify-center w-full min-h-screen font-bold text-center " style="position:fixed">
-        
-        <span class="text-white text-7xl" style="font-size:33px">
-            Technovore Hackathon 2023
-        </span>   
-        <span class="text-2xl text-black " >
-            Les Inscriptions pour cette édition sont achevées
-        </span>   
-        <br>
-
-        <a class="flex pt-2 text-xl text-white" href="{{route('welcome', null, false)}}">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            Accueil
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </a>
-
+  <div class="fin-card fade-in-up" style="position:relative;z-index:1;">
+    <div style="font-size:4rem;margin-bottom:24px;" aria-hidden="true">⏳</div>
+    <div class="hk-badge" style="margin-bottom:20px;display:inline-block;border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.1);color:var(--neon-orange);">
+      Inscriptions fermées
     </div>
-</div>
-
-<!-- scripts -->
-<script src="{{mix('js/particles.js')}}" ></script>
-<script src="{{mix('js/app-particles.js')}}"></script>
-
-
+    <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--text-primary);margin-bottom:16px;line-height:1.2;">
+      Les inscriptions sont<br>
+      <span style="color:var(--neon-orange);">terminées</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:1rem;line-height:1.7;margin-bottom:36px;">
+      La phase d'inscriptions pour le <strong style="color:var(--text-primary);">Technovore Hackathon 2026</strong> est terminée. Rendez-vous sur votre espace pour consulter les résultats de la présélection.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+      @if(Route::has('login'))
+        @auth
+          <a href="{{ route('dashboard', null, false) }}" class="btn-primary" id="fin-dashboard-btn">
+            Mon espace →
+          </a>
+        @else
+          <a href="{{ route('login', null, false) }}" class="btn-primary" id="fin-login-btn">
+            Se connecter →
+          </a>
+        @endauth
+      @endif
+      <a href="{{ route('welcome', null, false) }}" class="btn-ghost" id="fin-home-btn">← Retour à l'accueil</a>
+    </div>
+  </div>
 </body>
 </html>

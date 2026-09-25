@@ -19,7 +19,7 @@ class PreselectionQuiz extends Component
     public $currentQuestionIndex = 0;
     public $userResponses = [];
     public $isSubmitted = false;
-    public $isQuizOpen = true;
+    public $isQuizOpen = false;
     public $finalScore = 0;
     public $totalScore = 0;
 

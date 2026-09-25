@@ -1,239 +1,140 @@
-<div>
-    <div x-data="Tabsetup()">
+<div x-data="{ activeTab: 0, tabs: [0, 1] }" style="max-width: 700px; margin: 0 auto; padding: 20px;">
+    <form wire:submit.prevent="createEquipe">
+        @csrf
 
-        <form method="POST">
-            @csrf
-
-            <div x-show="activeTab===0">
-
-                <div class="tete" style="margin-top:20%;">
-                    <h1 class="titre">Inscription:</h1>
-                    <p>Etape 1</p>
-                </div>
-
-                <div class="champs">
-                    <div class="groupe">
-                        <h1> Êtes vous de l'ESATIC ?</h1>
-                        <div class="gr" style="display: flex; justify-content: space-between">
-                            <label for="yes">Oui</label>
-                            <input type="radio" name="choix" id="yes" value=1 wire:model="esatic" />
-                            <label for="no">Non</label>
-                            <input type="radio" name="choix" id="no" value=0 wire:model="esatic" />
-                        </div>
-
-                        <p>
-                        </p>
-
-                    </div>
-                </div>
-
+        <div x-show="activeTab===0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
+            <div class="tete" style="text-align: center; margin-bottom: 40px;">
+                <h1 class="titre" style="color: #FFFFFF; font-family: var(--font-display); font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Inscription</h1>
+                <p style="color: var(--neon-cyan); font-weight: bold; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">Étape 1 : Profil Utilisateur</p>
             </div>
 
-            <div x-show="activeTab===1">
-
-                <div class="tete" style="margin-top:20%;">
-                    <h1 class="titre">Inscription :</h1>
-                    <p>Etape 2</p>
+            <div class="champs" style="background: rgba(10, 22, 40, 0.6); padding: 40px; border-radius: 20px; border: 1px solid rgba(0, 245, 255, 0.2); backdrop-filter: blur(10px); width: 100%; max-width: 500px; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+                <div class="groupe" style="text-align: center;">
+                    <h2 class="tchamp" style="color: #FFFFFF; font-size: 1.4rem; margin-bottom: 30px; font-weight: 700; font-family: var(--font-display);">Êtes-vous étudiant à l'ESATIC ?</h2>
+                    <div class="gr" style="display: flex; justify-content: center; gap: 40px; align-items: center; font-size: 1.2rem;">
+                        <label style="color: #FFFFFF; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" value="1" wire:model="esatic" style="cursor: pointer; accent-color: var(--neon-cyan); transform: scale(1.3);" />
+                            <span style="color: #000000 !important;">Oui</span>
+                        </label>
+                        <label style="color: #FFFFFF; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" value="0" wire:model="esatic" style="cursor: pointer; accent-color: var(--neon-cyan); transform: scale(1.3);" />
+                            <span style="color: #000000 !important;">Non</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="champs">
-                    <div class="groupe" style="margin-top:0;">
-                        <h1 class="tchamp"> Information du groupe</h1>
-                        <div class="gr">
+            </div>
+        </div>
 
-                            <label for="niveau" id="level">Niveau *</label>
-                            <select id="niveau" name="niveau" class="@error('niveau')  border border-red-500 @enderror" wire:model='niveau' value="{{old("niveau")}}">
+        <div x-show="activeTab===1" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="tete" style="text-align: center; margin-bottom: 30px;">
+                <h1 class="titre" style="color: #FFFFFF; font-family: var(--font-display); font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Inscription</h1>
+                <p style="color: var(--neon-cyan); font-weight: bold; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">Étape 2 : Détails de l'Équipe</p>
+            </div>
 
-                                <option value=0>-- Choisir --</option>
+            <div class="champs" style="background: rgba(10, 22, 40, 0.6); padding: 40px; border-radius: 20px; border: 1px solid rgba(0, 245, 255, 0.2); backdrop-filter: blur(10px); width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+
+                {{-- SECTION GROUPE --}}
+                <div class="groupe" style="margin-bottom: 40px;">
+                    <h2 class="tchamp" style="color: var(--neon-cyan); font-weight: bold; margin-bottom: 25px; text-align: center; font-size: 1.5rem; font-family: var(--font-display); border-bottom: 1px solid rgba(0,245,255,0.2); padding-bottom: 10px;">Informations du Groupe</h2>
+                    <div class="gr" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Niveau d'études *</label>
+                            <select wire:model='niveau' style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                                <option value="0" style="color: black;">-- Choisir --</option>
                                 @foreach ($niveaux as $niveau)
-                                <option value="{{$niveau->id}}">{{$niveau->libelle}}</option>
+                                <option value="{{$niveau->id}}" style="color: black;">{{$niveau->libelle}}</option>
                                 @endforeach
-
                             </select>
-
-
-                            <label for="">Nom de l'équipe (30 Caractères Max) * </label>
-                            <input type="text" id="nomE" class="@error('nom_groupe')  border border-red-500 @enderror" wire:model.defer='nom_groupe' value="{{old("nom_groupe")}}" placeholder="Nom de l'équipe" minlength="3" maxlength="30">
-
-
-                            {{-- <label for="lgr">Logo du groupe</label> <br>
-                                <input type="file" id="lgr" wire:model.defer='photo_groupe' accept="image/*">  --}}
-
+                            @error('niveau') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
                         </div>
-                    </div>
-                    <div class="chef">
-                        <h1 class="tchef">Chef de l'Equipe</h1>
-                        <div class="info_chef">
 
-                            @if ($esatic == 1)
-                            <label for="NumMat" class="Matr">Numéro Matricule</label>
-                            <input type="text" id="NumMat" class="NumMat @error('matricule_chef')  border border-red-500 @enderror" wire:model.defer='matricule_chef' value="{{old("matricule_chef")}}" placeholder="00-ESATIC0000AB" min="16" maxlength="16">
-                            @endif
-
-                            <!-- <label for="">Nom * </label> -->
-                            <input type="text" class="nom @error('nom_chef')  border border-red-500 @enderror" wire:model.defer='nom_chef' value="{{old("nom_chef")}}" placeholder="Nom*">
-
-                            <!-- <label for=""> Prénoms * </label> -->
-                            <input type="text" class="Pr  @error('prenom_chef')  border border-red-500 @enderror" wire:model.defer='prenom_chef' value="{{old("prenom_chef")}}" placeholder="Prenom*">
-
-                            <br>
-
-                            <!-- <label for="">Genre</label> -->
-                            <select class="genre" name="Genre @error('genre_chef')  border border-red-500 @enderror" wire:model.defer='genre_chef' value="{{old("genre_chef")}}">
-                                <option value="g">---- Genre ----</option>
-                                <option value="Masculin">Masculin</option>
-                                <option value="Feminin">Féminin</option>
-                            </select>
-
-                            <!-- <label for="">Classe </label> -->
-                            <select class="clax" name="Classe @error('classe_chef')  border border-red-500 @enderror" wire:model.defer='classe_chef' value="{{old("classe_chef")}}">
-                                <option value="c">----@if($esatic == 1) Classe @else Ecole @endif----</option>
-                                @foreach ($classes as $classe)
-                                <option value="{{$esatic == 1 ? $classe->id : $classe->libelle}}">{{ $classe->libelle}}</option>
-                                @endforeach
-                            </select>
-
-                            <br>
-
-                            <label for="">Email :</label>
-                            <input type="email" class="email  @error('email_chef')  border border-red-500 @enderror" wire:model.defer='email_chef' value="{{old("email_chef")}}" placeholder="sophie@example.com"> <br>
-
-
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Nom de l'équipe (30 Caractères Max) *</label>
+                            <input type="text" wire:model.defer='nom_groupe' placeholder="Ex: Les Codeurs" maxlength="30" style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @error('nom_groupe') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
 
-            </div>
-            <div x-show="activeTab===2">
+                {{-- SECTION CHEF --}}
+                <div class="chef">
+                    <h2 class="tchef" style="color: var(--neon-cyan); font-weight: bold; margin-bottom: 25px; text-align: center; font-size: 1.5rem; font-family: var(--font-display); border-bottom: 1px solid rgba(0,245,255,0.2); padding-bottom: 10px;">Chef de l'Équipe</h2>
+                    <div class="info_chef" style="display: flex; flex-direction: column; gap: 20px;">
 
-                <div class="tete" style="margin-top:20%;">
-                    @if(!$errorEmail and !$errorMatricule )
-                    <h1 class="titre">Inscription:</h1>
-                    <p>Etape 3 </p>
-                    @else
-                    <p class="titre_m" style="color:red; font-weight:bolder">Les emails et les matricules doivent êtres uniques (rafraichissez la page svp!)</p>
-                    @endif
-                </div>
-                <div class="champs">
+                        @if ($esatic == 1)
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Numéro Matricule *</label>
+                            <input type="text" wire:model.defer='matricule_chef' placeholder="00-ESATIC0000AB" style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @error('matricule_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
+                        </div>
+                        @endif
 
-                    <div class="chef">
-                        <h1 class="tchef">Membre 2</h1>
-                        <div class="info_chef">
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Nom complet *</label>
+                            <input type="text" wire:model.defer='nom_chef' placeholder="Votre nom" style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @error('nom_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
+                        </div>
 
-                            @if ($esatic == 1)
-                            <label for="NumMat_m1" class="Matr">Numéro Matricule</label>
-                            <input type="text" id="NumMat_m1" class="NumMat_m @error('matricule_m2')  border border-red-500 @enderror" wire:model.defer='matricule_m2' value="{{old("matricule_m2")}}" placeholder="00-ESATIC0000AB" min="16" maxlength="16">
-                            @endif
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Prénoms *</label>
+                            <input type="text" wire:model.defer='prenom_chef' placeholder="Vos prénoms" style="background: rgba(255,255,255,0.05); color: #FFFFFF !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @error('prenom_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
+                        </div>
 
-                            <!-- <label for="">Nom * </label> -->
-                            <input type="text" class="nom_m @error('nom_m2')  border border-red-500 @enderror" wire:model.defer='nom_m2' value="{{old("nom_m2")}}" placeholder="Nom*">
-
-
-                            <!-- <label for=""> Prénoms* </label> -->
-                            <input type="text" class="Pr_m @error('prenom_m2')  border border-red-500 @enderror" wire:model.defer='prenom_m2' value="{{old("prenom_m2")}}" placeholder="Prenom*">
-
-                            <br>
-
-                            <!-- <label for="">Genre</label> -->
-                            <select class="genre_m @error('genre_m2')  border border-red-500 @enderror" wire:model.defer='genre_m2' value="{{old("genre_m2")}}">
-                                <option value="g">---- Genre ----</option>
-                                <option value="Masculin">Masculin</option>
-                                <option value="Feminin">Féminin</option>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Genre *</label>
+                            <select wire:model.defer='genre_chef' style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                                <option value="" style="color: black;">---- Choisir ----</option>
+                                <option value="Masculin" style="color: black;">Masculin</option>
+                                <option value="Feminin" style="color: black;">Féminin</option>
                             </select>
+                            @error('genre_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
+                        </div>
 
-
-                            <!-- <label for="">Classe </label> -->
-                            <select class="clax_m  @error('classe_m2')  border border-red-500 @enderror" wire:model.defer='classe_m2' value="{{old("classe_m2")}}">
-                                <option vlaue="c">----@if($esatic == 1) Classe @else Ecole @endif----</option>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Classe / École *</label>
+                            @if($esatic == 1)
+                            <select wire:model.defer='classe_chef' style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                                <option value="c" style="color: black;">---- Choisir Classe ----</option>
                                 @foreach ($classes as $classe)
-                                <option value="{{$esatic == 1 ? $classe->id : $classe->libelle}}">{{ $classe->libelle}}</option>
+                                <option value="{{$classe->id}}" style="color: black;">{{ $classe->libelle}}</option>
                                 @endforeach
-
                             </select>
+                            @else
+                            <input type="text" wire:model.defer='classe_chef' placeholder="Nom de votre école" style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @endif
+                            @error('classe_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
+                        </div>
 
-                            <br>
-
-                            <div>
-                                <label for="">Email :</label>
-                                <input type="email" class="email_m  @error('email_m2')  border border-red-500 @enderror" wire:model.defer='email_m2' value="{{old("email_m2")}}" placeholder="sophie@example.com"> <br>
-
-
-                            </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="color: #FFFFFF; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email *</label>
+                            <input type="email" wire:model.defer='email_chef' placeholder="sophie@example.com" style="background: rgba(255,255,255,0.9); color: #000000 !important; border: 1px solid rgba(0,245,255,0.4); padding: 12px; border-radius: 8px; font-size: 1rem; transition: all 0.3s; outline: none;">
+                            @error('email_chef') <span style="color: #ff4060; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</span> @enderror
                         </div>
                     </div>
-
-                    <div class="chef">
-                        <h1 class="tchef">Membre 3</h1>
-                        <div class="info_chef">
-
-                            @if ($esatic == 1)
-                            <label for="NumMat_m2" class="Matr">Numéro Matricule</label>
-                            <input type="text" id="NumMat_m2" class="NumMat_m @error('matricule_m3')  border border-red-500 @enderror" wire:model.defer='matricule_m3' value="{{old("matricule_m3")}}" placeholder="00-ESATIC0000AB" min="16" maxlength="16">
-                            @endif
-
-                            <!-- <label for="">Nom * </label> -->
-                            <input type="text" class="nom_m @error('nom_m3')  border border-red-500 @enderror" wire:model.defer='nom_m3' value="{{old("nom_m3")}}" placeholder="Nom*">
-
-
-                            <!-- <label for=""> Prénoms* </label> -->
-                            <input type="text" class="Pr_m @error('prenom_m3')  border border-red-500 @enderror" wire:model.defer='prenom_m3' value="{{old("prenom_m3")}}" placeholder="Prenom*">
-
-                            <br>
-
-                            <!-- <label for="">Genre</label> -->
-                            <select class="genre_m @error('genre_m3')  border border-red-500 @enderror" wire:model.defer='genre_m3' value="{{old("genre_m3")}}">
-                                <option value="g">---- Genre ----</option>
-                                <option value="Masculin">Masculin</option>
-                                <option value="Feminin">Féminin</option>
-                            </select>
-
-
-                            <!-- <label for="">Classe </label> -->
-                            <select class="clax_m  @error('classe_m3')  border border-red-500 @enderror" wire:model.defer='classe_m3' value="{{old("classe_m3")}}">
-                                <option vlaue="c">----@if($esatic == 1) Classe @else Ecole @endif----</option>
-                                @foreach ($classes as $classe)
-                                <option value="{{$esatic == 1 ? $classe->id : $classe->libelle}}">{{ $classe->libelle}}</option>
-                                @endforeach
-
-                            </select>
-
-                            <br>
-
-                            <div>
-                                <label for="">Email :</label>
-                                <input type="email" class="email_m  @error('email_m3')  border border-red-500 @enderror" wire:model.defer='email_m3' value="{{old("email_m3")}}" placeholder="sophie@example.com"> <br>
-
-
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class=" justify-center">
-
-                    @if($errorEmail or $errorMatricule or count($errors) > 0 )
-                    <span class="mx-4 text-xl text-red-500">
-                        veuillez verifier vos informations
-                    </span>
+                <div style="margin-top: 40px; text-align: center;">
+                    @if(count($errors) > 0)
+                        <span style="color: #ff4060; display: block; margin-bottom: 20px; font-weight: bold; font-size: 1rem;">
+                            Veuillez corriger les erreurs signalées ci-dessus.
+                        </span>
                     @endif
 
-                    <button wire:click.prevent='createEquipe' class="px-6 py-3 my-1 mr-1 text-sm font-bold text-white uppercase transition-all duration-150 rounded shadow outline-none 
-                        @if(!$errorEmail and !$errorMatricule and count($errors) == 0  )  bg-myblue @else bg-gray-500 @endif ease-linearbg-emerald-500  hover:shadow-lg focus:outline-none" type="submit">
+                    <button wire:click.prevent='createEquipe' style="cursor: pointer; background-color: var(--neon-cyan); color: #0a1628; padding: 15px 40px; font-size: 1.1rem; font-weight: 800; border: none; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 0 15px rgba(0,245,255,0.3);" onmouseover="this.style.boxShadow='0 0 25px rgba(0,245,255,0.6)'; this.style.transform='scale(1.05)';" onmouseout="this.style.boxShadow='0 0 15px rgba(0,245,255,0.3)'; this.style.transform='scale(1)';">
                         Confirmer l'enregistrement
                     </button>
                 </div>
-
             </div>
+        </div>
 
-        </form>
-
-        <div class="flex justify-center gap-4 p-2 border-t">
-            <button class="px-4 py-2 text-sm font-bold uppercase border rounded-md cursor-pointer text-orange border-orange hover:bg-orange hover:text-white hover:shadow" @click="activeTab--" x-show="activeTab>0">
+        <div class="flex justify-center gap-4 p-4 border-t" style="margin-top: 40px; border-color: rgba(255,255,255,0.1);">
+            <button @click="activeTab--" x-show="activeTab>0" style="color: var(--neon-orange); border: 1px solid var(--neon-orange); background: transparent; padding: 10px 25px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='var(--neon-orange)'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--neon-orange)';">
                 Précédent
             </button>
-            <button class="px-4 py-2 text-sm font-bold uppercase border rounded-md cursor-pointer border-orange text-orange hover:bg-orange hover:text-white hover:shadow" @click="activeTab++" x-show="activeTab<tabs.length">
+            <button @click="activeTab++" x-show="activeTab<tabs.length-1" style="color: var(--neon-orange); border: 1px solid var(--neon-orange); background: transparent; padding: 10px 25px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='var(--neon-orange)'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--neon-orange)';">
                 Suivant
             </button>
         </div>
-    </div>
+    </form>
 </div>

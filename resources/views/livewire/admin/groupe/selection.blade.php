@@ -146,9 +146,11 @@
 
                                 <td>
                                     @if($equipe->niveau->quiz_available)
-
-                                    {{$equipe->qsession->score < 0 ? -$equipe->qsession->score : $equipe->qsession->score}} / {{$equipe->qsession->quiz->score}}
-
+                                        @if($equipe->qsession && $equipe->qsession->quiz)
+                                            {{$equipe->qsession->score < 0 ? -$equipe->qsession->score : $equipe->qsession->score}} / {{$equipe->qsession->quiz->score}}
+                                        @else
+                                            N/A
+                                        @endif
                                     @endif
                                 </td>
 
