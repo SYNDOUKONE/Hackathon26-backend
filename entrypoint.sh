@@ -1,11 +1,11 @@
 #!/bin/sh
 set -e
 
-# Désactiver les MPM conflictuels avant de lancer Apache
-# On tente de supprimer les fichiers .load pour être certain qu'ils ne soient pas chargés
-rm -f /etc/apache2/mods-enabled/mpm_prefork.load
+# Désactiver les MPM thread-safe (event et worker) pour éviter le crash avec le module PHP non thread-safe
+# On supprime physiquement les fichiers de chargement pour éviter tout conflit
+rm -f /etc/apache2/mods-enabled/mpm_event.load
 rm -f /etc/apache2/mods-enabled/mpm_worker.load
-a2enmod mpm_event
+a2enmod mpm_prefork
 
-# Lancer Apache au premier plan (comme le fait l'image originale)
+# Lancer Apache au premier plan
 exec apache2-foreground
