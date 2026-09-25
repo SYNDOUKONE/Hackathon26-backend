@@ -24,8 +24,13 @@ RUN apt-get update && apt-get install -y \
 # Activer Apache rewrite (Laravel)
 RUN a2enmod rewrite
 
-# Remplacer la configuration Apache par une version minimaliste pour éviter les conflits de MPM
-COPY apache-min.conf /etc/apache2/apache2.conf
+# Copier le script d'entrée et donner les permissions d'exécution
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Utiliser le script d'entrée comme point d'entrée du conteneur
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 
 # Changer le DocumentRoot vers /public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
