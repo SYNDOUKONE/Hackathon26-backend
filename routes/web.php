@@ -28,13 +28,17 @@ Route::get('/test-final-99', 'App\Http\Controllers\AdminController@inscription')
     Route::get('/restauration', 'App\Http\Controllers\AdminController@restauration')->name('restauration');
     Route::post('/commander', 'App\Http\Controllers\AdminController@getCommandes')->name('get.commande');
 
-    Route::group(['middleware' => ['role:super-admin']], function () {
+    Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
+        Route::get('/admin', function() {
+            return redirect()->route('Admin.parametres.index');
+        })->name('admin');
         Route::get('/admin/parametres',  'App\Http\Controllers\AdminController@index')->name('Admin.parametres.index');
         Route::get('/admin/groupes',  'App\Http\Controllers\AdminController@selectionGroupe')->name('Admin.groupe.selection');
         Route::get('/admin/groupes/down', [VideoController::class, 'downloadVideo'])->name('Admin.groupe.downloadvideo');
         Route::get('/admin/impression',  'App\Http\Controllers\AdminController@impression')->name('Admin.groupe.impression');
         Route::get('/admin/restauration',  'App\Http\Controllers\AdminController@gestionRestaurant')->name('Admin.restauration');
         Route::get('/admin/etudiants', 'App\Http\Controllers\AdminController@participantAddView')->name('Admin.participantAdd');
+
 
         Route::get('/pdf/listeEquipe/niveau1', 'App\Http\Controllers\pdfController@listeEquipeN1')->name('liste.equipe.n1');
         Route::get('/pdf/listeEquipe/niveau2', 'App\Http\Controllers\pdfController@listeEquipeN2')->name('liste.equipe.n2');
