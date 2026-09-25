@@ -49,11 +49,11 @@
                     <div class="w-full h-full p-6" style="background: rgba(6, 11, 20, 0.5);">
                         <div x-show="activeTab===0" >
                             @livewire('admin.parametrage.hackaton')
-                        </div
-                        {{--
+                        </div>
                         <div x-show="activeTab===1" >
                             @livewire('admin.parametrage.niveau')
-                        </div
+                        </div>
+                        {{--
                         <div x-show="activeTab===2" >
                             @livewire('admin.salle')
                         </div
